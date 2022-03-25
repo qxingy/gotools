@@ -1,14 +1,17 @@
-FROM golang:1.16
+FROM golang:alpine AS builder
 
-COPY . /go/src
+COPY . /src
+WORKDIR /src
 
-WORKDIR /go/src
+RUN GOPROXY=https://goproxy.io,https://goproxy.cn,direct \
+        && go generate ./... \
+        && go build -v -o app .
 
-RUN  GOPROXY=https://goproxy.io,https://goproxy.cn,direct \
-         && go build -v -o /go/bin/. . 
+FROM alpine:latest
 
-WORKDIR /go/bin
+WORKDIR /app
+COPY --from=builder /src/app .
 
 EXPOSE 8080
 
-CMD ["./echoserver"]
+CMD ["./app"]

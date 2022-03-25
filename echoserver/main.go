@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 )
 
 func main() {
+	log.Println("开启echoserver!")
 	http.HandleFunc("/",func(w http.ResponseWriter, r *http.Request) {{
 		fmt.Fprintln(w,"Hello world!")
 	}})
